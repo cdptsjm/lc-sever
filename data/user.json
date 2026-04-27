@@ -1,0 +1,29 @@
+[
+    {
+        "id": 6434895,
+        "key": "123456",
+        "name": "admin",
+        "email": "admin",
+        "school": 776883,
+        "usergroup": 1128989,
+        "status": 1,
+        "free_control": 1,
+        "focus": 1,
+        "schoolinfo": {
+            "id": 776883,
+            "school_id": "ae164c7d-bf69-46fb-93e2-f19172b1bc61",
+            "name": "成都市泡桐树中学机盟",
+            "abbr": "机盟"
+        },
+        "groupinfo": [
+            {
+                "id": 1128989,
+                "school": 776883,
+                "name": "(初三)2026学部\/2026学部导师02班",
+                "description": null,
+                "created_at": "2023-08-28 10:44:48",
+                "updated_at": "2023-08-28 10:44:48"
+            }
+        ]
+    }
+]

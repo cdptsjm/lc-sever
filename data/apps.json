@@ -1,0 +1,27 @@
+
+[
+    {
+        "id": "1",
+        "name": "课后作业",
+        "description": "泡桐树中学的课后作业",
+        "version": "6.0.1.2",
+        "download_url": "http://ld.frp.one:22127/apps/%E8%AF%BE%E5%90%8E%E4%BD%9C%E4%B8%9A.apk",
+        "icon_url": "http://ld.frp.one:22127/appicon/kuzy.png"
+    },
+    {
+        "id": "2",
+        "name": "App 2",
+        "description": "This is the second app.",
+        "version": "2.0",
+        "download_url": "http://example.com/app2.apk",
+        "icon_url": "http://example.com/app2_icon.png"
+    },
+    {
+        "id": "3",
+        "name": "App 3",
+        "description": "This is the third app.",
+        "version": "1.5",
+        "download_url": "http://example.com/app3.apk",
+        "icon_url": "http://example.com/app3_icon.png"
+    }
+]

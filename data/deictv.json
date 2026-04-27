@@ -1,0 +1,109 @@
+{
+    "id": 37689,
+    "name": "初四2023级策略通用",
+    "workspace_tactics": {
+        "worktime": []
+    },
+    "app_tactics": {
+        "applist": [
+                    ]
+    },
+    "device_tactics": {
+        "deviceManage": {
+            "command_gps": true,
+            "command_camera": true,
+            "command_recording": true,
+            "command_data_flow": true,
+            "command_wifi_switch": true,
+            "command_force_open_wifi": false,
+            "command_otg": true,
+            "command_sd_card": true,
+            "command_bluetooth": true,
+            "command_phone_msg": true,
+            "command_connect_usb": true,
+            "command_wifi_advanced": true
+        }
+    },
+    "illegal_tactics": {
+        "usb_to_pc": {
+            "enable": false,
+            "notify_admin": false,
+            "eliminate_data": false,
+            "lock_workspace": false
+        },
+        "already_root": {
+            "enable": false,
+            "notify_admin": false,
+            "eliminate_data": false,
+            "lock_workspace": false
+        },
+        "change_simcard": {
+            "enable": false,
+            "notify_admin": false,
+            "eliminate_data": false,
+            "lock_workspace": false
+        },
+        "prohibited_app": {
+            "enable": false,
+            "notify_admin": false,
+            "eliminate_data": false,
+            "lock_workspace": false
+        }
+    },
+    "device_setting": {
+        "sdcard_and_otg": 1,
+        "otg_set": {
+            "status": 0,
+            "pv_list": []
+        },
+        "simcard": false,
+        "data_flow_status": false,
+        "gallery_status": false,
+        "camera_status": false,
+        "alarm_clock_status": false,
+        "calendar_status": false,
+        "logout_status": false,
+        "only_install_store_app_status": false,
+        "hide_cleanup_status": false,
+        "hide_accelerate_status": true,
+        "allow_change_password_status": false,
+        "enable_gesture_pwd_status": false,
+        "school_class_display_status": false,
+        "enable_wifi_advanced_status": true,
+        "enable_gps_status": 1,
+        "keep_alive_package": null,
+        "protected_eyes_status": {
+            "distance_status": 0,
+            "sitting_position_status": 0,
+            "sensitive_status": 0
+        },
+        "remind_duration": {
+            "remind_status": 0,
+            "duration": 0
+        },
+        "launch_app": {
+            "launch_package": null,
+            "launch_mode": 2
+        },
+        "enable_screenshots_status": true,
+        "show_privacy_statement_status": true,
+        "enable_client_admin_status": true,
+        "disable_reinstall_system_status": false,
+        "enable_system_upgrade_status": true,
+        "rotate_setting_status": true
+    },
+    "worktime": [],
+    "wifi_tactics": [],
+    "wifi_tactics_2": [],
+    "usergroup": 1127807,
+    "workspace_status": false,
+    "app_status": true,
+    "device_status": true,
+    "wifi_status": false,
+    "illegal_status": false,
+    "updated_at": "2026-02-03 15:23:29",
+    "release_control": false,
+    "free_control": true,
+    "interest_applist": [],
+    "enable_amap_status": 0
+}
