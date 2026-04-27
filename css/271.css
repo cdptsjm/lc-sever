@@ -1,0 +1,87 @@
+/*271*/
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+}
+
+.header-271 {
+    height: 82px;
+    background-color: #FFF;
+}
+
+.header-271 .logo {
+    width: 272px;
+    height: 49px;
+    margin-top: 16px;
+    background-image: url(../images/logo_271.png);
+}
+
+.footer-index {
+    width: 100%;
+    background-color: #61666b;
+}
+
+.footer-271 {
+    /*width: 88%;*/
+    height: 200px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.footer-left {
+    text-align: left;
+    float: left;
+}
+
+.footer-left p {
+    line-height: 30px;
+}
+
+.other-tel {
+    margin-left: 68px;
+}
+
+.inline-server {
+    color: #006D5B;
+}
+
+.footer-right {
+    float: right;
+}
+
+.footer-right img {
+    margin-left: 20px;
+    max-width: 206px;
+}
+
+.footer-center {
+    display: inline-block;
+    color: #FFF;
+    font-size: 14px;
+    letter-spacing: 1px;
+    margin-top: 70px;
+}
+
+.footer-center .line {
+    margin: 0 5px;
+}
+
+@media screen and (max-width: 1020px) {
+    .footer-left p {
+        margin-top: 8px !important;
+        line-height: 21.6px;
+    }
+    .footer-right img {
+        height: 110px !important;
+        margin-top: 15px;
+        margin-left: 0;
+    }
+}
+
+@media screen and (max-width: 1120px) {
+    .footer-center {
+        width: 50%;
+    }
+}

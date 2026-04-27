@@ -1,0 +1,1209 @@
+@charset "utf-8";
+
+/***  page master style **/
+
+body{
+    font-family: "Microsoft Yahei",Tahoma, Helvetica, Arial, "\5b8b\4f53", sans-serif;
+    background-color:#fafafa;
+}
+/**** 修正部分app.css默认定义 *****/
+.row{
+    margin:0;
+}
+.panel-body:after, .panel-body:before{
+    display:none;
+}
+
+/**** form表单必填字段星号定义 *****/
+.form-group .required:after {
+    font-family: 'normal normal normal 14px/1 FontAwesome';
+    font-style: normal;
+    font-weight: bold;
+    font-size: 26px;
+    position: absolute;
+    top: 0;
+    right: -6px;
+    color: #d00;
+    content: "*";
+    display: inline-block;
+}
+
+/*********/
+.container-fluid{
+    width:98%;
+    padding: 0;
+    margin: 0 auto;
+}
+
+.page-header {
+    min-height: 60px;
+    margin: 0;
+    padding:0;
+    border:0;
+}
+.page-header .header_logo{
+    /*width:626px;*/
+    height:60px;
+}
+
+.page-header .navbar-right{
+    margin-right:0;
+}
+
+.page-header .navbar-default{
+    background-color:#fafafa;
+    border:0;
+    min-width:1000px;
+    margin: 0;
+}
+.page-header .header-right{
+    height: 60px;
+    width: 40%;
+    float:right;
+}
+.page-header .header-right ul{
+    margin:0;
+    
+}
+.page-header .header-right .list-group-item{
+    border:0;
+    background-color:#fafafa;
+    text-align:right;
+    padding: 5px 20px 2px;
+}
+.page-header .header-right .list-group-item:first-child{
+    font: 18px blod;
+    padding: 6px 60px 0 5px;
+}
+
+.page-menu .navbar-default{
+    margin: 0;
+    background-color:#6acaf0;
+    border-color:#6acaf0;
+}
+.page-menu .navbar-default .navbar-nav>li{
+    margin: 0 3px;
+}
+.page-menu .navbar-default .navbar-nav>li>a,
+.page-menu .navbar-default .navbar-text{
+    font-weight:bold;
+    color:#fff;
+    border-radius: 5px;
+    padding: 2px 10px;
+    margin: 5px 0;
+}
+.page-menu .navbar-default .navbar-nav>li>a:hover{
+    font-weight:bold;
+    background-color:#fff;
+    color:black;
+}
+.page-menu .navbar-default .navbar-nav>.active>a,
+.page-menu .navbar-default .navbar-nav>.active>a:focus,
+.page-menu .navbar-default .navbar-nav>.active>a:hover{
+    font-weight:bold;
+    background-color:#fff;
+    color:black;
+}
+.page-menu .dropdown-menu{
+    background-color:#6acaf0;
+    border-color:#6acaf0;
+}
+.page-menu .dropdown-menu>li>a{
+    font-weight:bold;
+    color:#fff;
+}
+.page-menu .dropdown-menu>li>a:hover{
+    font-weight:bold;
+    background-color:#fff;
+    color:black;
+}
+.page-menu .well-sm{
+    margin-top:3px;
+    margin-bottom:0px;
+}
+
+.page-menu .well{
+    border: none;
+}
+.footer{
+    position: absolute;
+    bottom: 0;
+    height: 60px;
+}
+.footer,
+.footer .navbar-default{
+  background-color: #eceef0;
+}
+.article-content{
+    margin-top:5px;
+    padding: 0 10px;
+    min-height:700px;
+    min-width:1200px;
+    border:1px solid #eaeaea;
+    background-color:#fff;
+    position: relative;
+}
+/***  Eend page master style  **/
+/***  Start login style  **/
+.user-login .panel-heading{
+    height:34px;
+    line-height:34px;
+    padding:0 15px;
+    background:url(../images/top.png) repeat-x bottom;
+}
+
+/***** profile ****/
+.profile-right{
+    margin-left:360px;
+}
+.profile-left{
+    float:left;
+    width:360px;
+    margin-left:-10px;
+}
+
+.profile-left-info{
+    background: url(../images/person-left-bg.png) no-repeat 0 0;
+    width: 360px;
+    height: 280px;
+    color: #fff;
+    font-size: 16px;
+}
+.profile-left-info .head-img{
+    text-align: center;
+    padding-top: 30px;
+}
+
+.profile-left-info .head-img img{
+    width: 110px;
+    height: 110px;
+    border: 5px solid #42bdad;
+    border-radius:70px;
+}
+
+.profile-left-info .user-name{
+    text-align: center;
+    letter-spacing: 4px;
+    font-weight: bold;
+    margin: 20px 0;
+    color:#666;
+    line-height:20px;
+}
+
+.profile-left-info .user-phone-container{
+    text-align: center;
+    margin-top: 15px;
+}
+
+.profile-left-info .user-phone-img{
+    display: inline-block;
+    vertical-align: middle;
+    width: 17px;
+    height: 20px;
+    background: url(../images/person-icons.png) no-repeat 2px 1px;
+}
+.profile-left-info .user-phone{
+    display: inline-block;
+    vertical-align: middle;
+    min-width:120px;
+}
+
+.profile-left .person-info-icons{
+    position:relative;
+    width: 20px;
+    height: 20px;
+    z-index:1;
+    margin: 10px 10px 0 20px;
+}
+
+.profile-left .nav-pills>li.active>a,
+.profile-left .nav-pills>li.active>a:focus,
+.profile-left .nav-pills>li.active>a:hover{
+    color: #727272;
+    background-color: #eee;
+    border-radius:unset;
+    border-left: 5px solid #4ECFC6;
+}
+
+.profile-left .nav-pills>li>a:hover{
+    color: #727272;
+    border-radius:unset;
+    background-color: #eee;
+    border-left: 5px solid #4ECFC6;
+}
+
+.profile-left .person-info-icon-p{
+    background: url(../images/person-icons.png) no-repeat -49px 0px;
+}
+
+.profile-left .person-info-icon-e{
+    background: url(../images/person-icons.png) no-repeat -78px 0px;
+}
+
+.detail-info table tbody td{
+    border:none;
+}
+
+/***
+ *  admins 
+ *
+ **/
+
+.article-content .well{
+    border:none;
+    background:none;
+    margin-bottom:5px;
+}
+
+.article-content .table-list tr,
+.article-content .table-list th{
+    border-color: #d9edf7;
+}
+
+.app-file{
+    display: inline-block;
+    vertical-align: bottom;
+    width: 114px;
+    height: 114px;
+    margin: 0 10px;
+    background: url(../images/app-bg.png) no-repeat;
+    text-align: center;
+}
+
+.app-file-done{
+    display: inline-block;
+    vertical-align: bottom;
+    width: 114px;
+    height: 114px;
+    margin: 0 10px;
+    background: url(../images/app-done-bg.png) no-repeat;
+    text-align: center;
+}
+
+.add-img-btn-drop{
+    border:2px dashed #41cac0;
+}
+
+.uploadBtn_file {
+    position: absolute;
+    Opacity: 0;
+    height: 35px !important;
+    width: 100px !important;
+    right: -41px;
+}
+
+.app-icon {
+    vertical-align: bottom;
+    width: 114px;
+    height: 114px;
+    margin: 0 10px;
+    background: url(../images/app-icon.png) no-repeat;
+}
+
+.add-img-btn, .upload-img-show {
+    position: relative;
+    vertical-align: middle;
+    display: inline-block;
+    width: 134px;
+    border: 1px dashed #727272;
+    height: 180px;
+    margin: 0 10px;
+    text-align: center;
+}
+.img-show{
+    width: 134px;
+    height: 180px;
+}
+
+.upload-img-show {
+    position: relative;
+    border: none;
+    box-shadow: 0 1px 1px #B8BABA;
+}
+
+.add-img-btn div {
+    width: 40px;
+    height: 40px;
+    margin: 50px auto 20px auto;
+}
+.add-circle-btn {
+    background: url(../images/add-circle-btn.png) no-repeat;
+}
+.img-upload {
+    border: 1px dashed #727272;
+    padding: 20px 6px;
+    width: 800px;
+    height: 222px;
+}
+.uploadBtn_images {
+    position: absolute;
+    Opacity: 0;
+    height: 180px;
+    width: 134px;
+    filter: Alpha(Opacity=0);
+    font-size: 36px;
+    top: 0;
+    right: 0;
+}
+.add-img-btn span {
+    font-size: 16px;
+    color: #888;
+}
+
+.app-ico-store {
+    background: url('../images/store-app.png') no-repeat scroll;
+}
+/* 应用列表页面星级评论 */
+.star-common {
+    height: 16px;width: 83px;
+}
+.start-average-0 {
+    background: url('../images/stars.png') no-repeat scroll -5px -142px;
+}
+.start-average-5 {
+    background: url('../images/stars.png') no-repeat scroll -5px -128px;
+}
+.start-average-10 {
+    background: url('../images/stars.png') no-repeat scroll -5px -114px;
+}
+.start-average-15 {
+    background: url('../images/stars.png') no-repeat scroll -5px -100px;
+}
+.start-average-20 {
+    background: url('../images/stars.png') no-repeat scroll -5px -86px;
+}
+.start-average-25 {
+    background: url('../images/stars.png') no-repeat scroll -5px -72px;
+}
+.start-average-30 {
+    background: url('../images/stars.png') no-repeat scroll -5px -58px;
+}
+.start-average-35 {
+    background: url('../images/stars.png') no-repeat scroll -5px -44px;
+}
+.start-average-40 {
+    background: url('../images/stars.png') no-repeat scroll -5px -30px;
+}
+.start-average-45 {
+    background: url('../images/stars.png') no-repeat scroll -5px -16px;
+}
+.start-average-50 {
+    background: url('../images/stars.png') no-repeat scroll -5px -2px;
+}
+
+/* 应用详情页面中的*/
+.stars2-common {
+    height: 18px;width: 100px;
+}
+.start2-average-5 {
+    background: url('../images/stars2.png') no-repeat scroll 2px 1px;
+}
+
+.start2-average-4 {
+    background: url('../images/stars2.png') no-repeat scroll 2px -17px;
+}
+
+.start2-average-3 {
+    background: url('../images/stars2.png') no-repeat scroll 2px -34px;
+}
+
+.start2-average-2 {
+    background: url('../images/stars2.png') no-repeat scroll 2px -52px;
+}
+
+.start2-average-1 {
+    background: url('../images/stars2.png') no-repeat scroll 2px -69px;
+}
+
+.list-star-sm{
+    background: url('../images/list-star-sm.png') no-repeat;
+    width: 20px;
+    height: 20px;
+    position: relative;
+    left: -11px;
+}
+
+/* 应用适配设备列表展示 */
+.adapter-device {
+    padding-left: 0;
+}
+
+.adapter-device>li {
+    list-style: none;
+    width: 160px;
+    float: left;
+    overflow: hidden;
+    line-height: 17px;
+    font-size: 12px;
+}
+.nav-tabs{
+    border-bottom: 1px solid #bce8f1;
+}
+.nav-tabs>li.active>a,
+.nav-tabs>li.active>a:focus,
+.nav-tabs>li.active>a:hover{
+    color: #31708f;
+    background-color: #d9edf7;
+    border: 1px solid #bce8f1;
+    border-bottom-color: transparent;
+    cursor: default;
+}
+
+.comment-star{
+    position: relative;
+    top: 20px;
+    left: -24px;
+    width: 44px;
+    height:44px;
+    background: url('../images/list-star-lg.png');
+    font-size: 18px;
+    text-align: center;
+    line-height: 44px;
+    color: #fff;
+}
+
+/** 用户组的树状结构 start */
+.tree, .tree ul {
+    margin:0;
+    padding:0;
+    list-style:none
+}
+.tree ul {
+   /* margin-left:1em;*/
+    margin-left: 6px;
+    position:relative
+}
+.tree ul ul {
+    margin-left:.5em
+}
+.tree ul:before {
+    content:"";
+    display:block;
+    width:0;
+    position:absolute;
+    top:0;
+    bottom:0;
+    left:0;
+    border-left:1px solid
+}
+.tree li {
+    margin:0;
+    padding:0 0 0 1em;
+    line-height:2em;
+    color:#369;
+    font-weight:700;
+    position:relative
+}
+.tree ul li:before {
+    content:"";
+    display:block;
+    width:10px;
+    height:0;
+    border-top:1px solid;
+    margin-top:-1px;
+    position:absolute;
+    top:1em;
+    left:0
+}
+.tree ul li:last-child:before {
+    background:#fff;
+    height:auto;
+    top:1em;
+    bottom:0
+}
+.indicator {
+    margin-right:5px;
+}
+.tree li a {
+    text-decoration: none;
+    color:#369;
+}
+.tree li button, .tree li button:active, .tree li button:focus {
+    text-decoration: none;
+    color:#369;
+    border:none;
+    background:transparent;
+    margin:0px 0px 0px 0px;
+    padding:0px 0px 0px 0px;
+    outline: 0;
+}
+/** 用户组的树状结构 end */
+
+/** 设备列表页面 */
+.checkbox-wp{
+    text-align: right;
+}
+
+.ui-checkbox {
+    display: inline-block;
+    vertical-align: middle;
+    width: 16px;
+    height: 16px;
+    background: url(../images/ui-select-green.png) no-repeat 0px 0px;
+    cursor: pointer;
+}
+
+.ui-checkbox.selected {
+    background: url(../images/ui-select-green.png) no-repeat -18px 0px;
+}
+
+.table-bordered>tbody>tr>td{
+    border: none;
+    vertical-align: middle;
+}
+
+.mask {
+    position: absolute; top: 0px; filter: alpha(opacity=60); background-color: #777;
+    z-index: 1002; left: 0px;
+    opacity:0.5; -moz-opacity:0.5;
+    width: 100%;
+    height: 150%;
+}
+.mask>i {
+    display: block;
+    width: 87px;
+    height: 87px;
+    background: url(../images/loading.gif) no-repeat;
+    margin: 0 auto;
+    margin-top: 350px;
+
+}
+
+input.btn.btn-default.btn-xs {
+    background: #576576;
+    color: #fff;
+    border: 1px solid #576576;
+    padding: 2px 6px;
+}
+
+.line-icon{
+    vertical-align: middle;
+    display: inline-block;
+    height: 20px;
+    width: 20px;
+}
+
+.title-icon{
+    background: url(../images/line-title-icons.png) no-repeat 3px 0;
+}
+
+.applist-icon {
+    background: url(../images/line-title-icons.png) no-repeat -23px 0;
+}
+
+.t-block-content-title {
+    width: 17px;
+    height: 16px;
+    margin-left: 10px;
+    margin-bottom: 3px;
+}
+.t-block-content-icon{
+    width: 17px;
+    height: 16px;
+    margin-left: 10px;
+    margin-bottom: 3px;
+    font-size:16px;
+    color:#ffa201;
+}
+
+.time-tactics-icon{
+    background: url(../images/show-tactics-icon.png) no-repeat 0 0;
+}
+
+.app-tactics-icon{
+    background: url(../images/show-tactics-icon.png) no-repeat -26px 0;
+}
+.policy-tactics-icon{
+    background: url(../images/show-tactics-icon.png) no-repeat -52px 0;
+}
+
+.wifi-tactics-icon{
+    background: url(../images/show-tactics-icon.png) no-repeat -78px 0;
+}
+
+.illegal-tactics-icon{
+    background: url(../images/show-tactics-icon.png) no-repeat -104px 0;
+}
+
+.time-tactics-icon-close{
+    background: url(../images/show-tactics-icon.png) no-repeat 0 -26px;
+}
+
+.app-tactics-icon-close{
+    background: url(../images/show-tactics-icon.png) no-repeat -26px -26px;
+}
+.policy-tactics-icon-close{
+    background: url(../images/show-tactics-icon.png) no-repeat -52px -26px;
+}
+
+.wifi-tactics-icon-close{
+    background: url(../images/show-tactics-icon.png) no-repeat -78px -26px;
+}
+
+.illegal-tactics-icon-close{
+    background: url(../images/show-tactics-icon.png) no-repeat -104px -26px;
+}
+
+.menu-app-icon{
+    background: url(../images/title-img.png) -68px no-repeat;
+}
+
+.row-span-size {
+    width: 35px;
+    height: 28px;
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 8px;
+}
+.wifi-icon {
+    background: url(../images/internet-status.png) no-repeat 0 0;
+}
+
+.bluetooth-icon {
+    background: url(../images/internet-status.png) no-repeat -37px 0;
+}
+
+.ui-device-manage li {
+    display: inline-block;
+    width: 190px;
+    margin: 0 12px;
+}
+
+.ui-device-manage-camera{
+    background: url(../images/device-manage-ui.png) no-repeat 0 -104px;
+}
+
+.ui-device-manage-camera.select {
+    background: url(../images/device-manage-ui.png) no-repeat 0 0;
+}
+
+.ui-device-manage-bluetooth{
+    background: url(../images/device-manage-ui.png) no-repeat -312px -104px;
+}
+.ui-device-manage-bluetooth.select {
+    background: url(../images/device-manage-ui.png) no-repeat -312px 0;
+}
+
+.ui-device-manage-usbConnect{
+    background: url(../images/device-manage-ui.png) no-repeat -836px -104px;
+}
+
+.ui-device-manage-usbConnect.select {
+    background: url(../images/device-manage-ui.png) no-repeat -835px 0;
+}
+
+.Strategy{
+    border-bottom: 1px solid #bce8f1;
+}
+
+.tactics-c{
+    padding-bottom: 10px;
+}
+
+.block-select{
+    display: inline-block;
+    vertical-align: middle;
+    width: 17px;
+    height: 17px;
+    background: url(../images/ui-select.png) no-repeat -18px 0;
+    margin-right: 15px;
+}
+
+.tactics-icons {
+    background: url(../images/tactics_icon.png) no-repeat;
+    display: inline-block;
+    vertical-align: middle;
+    width: 55px;
+    height: 54px;
+}
+.tactics-icons.icon04 {
+    background-position: -174px 0;
+}
+
+.tactics-icons.icon01 {
+    background-position: 0 0;
+}
+
+.tactics-icons.icon02 {
+    background-position: -55px 0;
+}
+
+.tactics-icons.icon03 {
+    background-position: -115px 0;
+}
+
+.ui-select.select {
+    background: url(../images/ui-select.png) no-repeat 0 0;
+}
+
+
+/** 重写样式 */
+.form-control{
+    height: 28px;
+    padding: 0 12px;
+}
+
+.article-content .well-sm {
+    padding: 6px 0 0;
+}
+
+.page-menu .well-sm {
+    padding: 6px 0 5px 18px;
+}
+
+.btn{
+    padding: 3px 8px;
+}
+
+a.btn.btn-primary, button.btn.btn-primary, .btn.btn-default.btn-lg{
+    font-size: 12px;
+}
+
+.form-control, output {
+    font-size: 12px;
+}
+
+body {
+    font-size: 12px;
+}
+
+ul#navbar-nav {
+    font-size: 14px;
+}
+
+.navbar-nav {
+    margin-left: -30px;
+}
+
+.pagination>li>a, .pagination>li>span {
+    padding: 2px 9px;
+}
+
+label,.label {
+    font-size: 12px;
+    font-weight: 100;
+}
+#select_schools_control >label{
+    font-size: 14px;
+}
+
+.control-label{
+    font-size: 14px;
+}
+
+.app-multi-list .head{
+    font-size: 12px;
+}
+
+.btn-group-lg>.btn, .btn-lg {
+    font-size: 14px;
+}
+
+th {
+    font-weight: 100;
+}
+
+.panel {
+     -webkit-box-shadow: none;
+}
+
+.form-group .required:after {
+    font-weight: normal;
+    font-size: 12px;
+    top: 5px;
+}
+
+.bootstrap-dialog.type-primary .modal-header {
+    background-color: #d9edf7;
+    border-color: #bce8f1;
+}
+
+.bootstrap-dialog .bootstrap-dialog-title {
+    color: #31708f;
+}
+
+.tree li {
+    color: rgb(106, 202, 240);
+}
+
+.bootstrap-dialog.size-large .bootstrap-dialog-message,
+.bootstrap-dialog .bootstrap-dialog-message{
+    font-size: 14px;
+}
+
+.bootstrap-dialog .modal-header {
+    padding: 8px;
+}
+
+.th-time-item,.th-grant-item{
+    width: 136px;
+}
+
+.operate {
+    min-width: 134px;
+    max-width: 160px;
+}
+.operate-item{
+    width: 106px;
+}
+
+.th-checkbox-item {
+    width: 35px;
+}
+
+.select-link-whitelistgroup, .select-link-tactic {
+    font-size: 12px;
+}
+
+/* 显示内容过长， 允许换行的样式 */
+.allow-a-newline {
+    max-width: 200px;
+    word-break: break-all;
+    word-wrap: break-word;
+}
+
+.whitelist-name {
+    width: 200px;
+}
+
+.public-signs{
+    width: 58px;
+}
+
+.serial-number{
+    width: 50px;
+
+}
+.common-width {
+    min-width: 100px;
+}
+
+.th-username,.th-usergroup {
+    min-width: 120px;
+    max-width: 246px;
+    word-break:break-all;
+    word-wrap:break-word;
+}
+
+.th-name,.td-name,.url-show {
+    min-width: 200px;
+    max-width: 400px;
+    word-break:break-all;
+    word-wrap:break-word;
+}
+
+/** 分割线样式 */
+.split-line {
+    border-bottom: 1px #bce8f1 dashed;
+    padding-bottom: 4px;
+}
+
+/** 行间距设置 */
+.line-spacing {
+    margin-top: 8px;
+}
+
+.th-status {
+    width: 80px;
+}
+
+.th-status-mx {
+    min-width: 66px;
+    max-width: 80px;
+}
+
+.td-mx-operate {
+    min-width: 210px;
+}
+
+.vertical-right-center {
+    float: right;
+    line-height: 28px;
+    padding-right: 8px;
+}
+
+/* 给导航菜单容器添加默认高度,防止导航fixed 定位后,文档高度小于屏幕高度 */
+.navbar-container {
+    height: 44px;
+}
+.navbar.navbar-default{
+   min-height: 44px;
+}
+.navbar-brand {
+   height: 42px;
+}
+.navbar.navbar-defaul.container-fluid.foot-wrap {
+    height: 110px;
+}
+
+.affix {
+    top:0;
+    width: 98%;
+    z-index: 999;
+}
+.page-menu .navbar-default .navbar-nav>li>a{
+    padding: 5px 10px;
+}
+
+/** 左侧带用户分组树的页面对齐设置*/
+.left-tree-page-alignment {
+    padding: 0 0 0 6px;
+    border: 1px solid #eaeaea;
+    background-color: #fbfbfb;
+    border-radius: 4px;
+    width: 16%;
+    position: absolute;
+    bottom: 15.33px;
+    top: 6px;
+    overflow: auto;
+}
+
+.left-tree-page-alignment .well {
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+
+/** 右侧侧带用户分组树的页面对齐设置*/
+.right-tree-page-alignment {
+    width: 84%;
+    padding: 0 0 0 10px;
+    float: right;
+}
+
+.right-tree-page-alignment .well {
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+
+.glyphicon.glyphicon-user {
+    top: -6px;
+}
+
+.branch-title{
+    cursor: pointer;
+    display: inline-block;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    width: 72%;
+    white-space: nowrap;
+}
+
+li.branch>ul {
+    margin-top: -12px;
+}
+
+.tree li {
+    padding: 0 0 0 1em;
+}
+
+#tree>li, #vtree>li {
+    padding-left: 0;
+}
+
+.usergroup-info, .username-info {
+    cursor: pointer;
+    display: inline-block;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+ul#tacticTab>li>a, ul#treeTab>li>a {
+    padding: 6px 12px;
+}
+
+.wl-url-list {
+    padding-left: 0;
+}
+.wl-url-list>li {
+    list-style: none;
+    width: 250px;
+    float: left;
+    overflow: hidden;
+    line-height: 16px;
+    font-size: 12px;
+}
+
+.modal-dialog {
+    margin: 110px auto;
+}
+
+/**  只读输入框背景色改成白色 */
+.form-control[disabled], .form-control[readonly] {
+    background-color: #fff;
+}
+
+.comment-related-info {
+    padding: 10px 0;
+}
+.comment-row {
+    padding: 0 35px 20px 35px;;
+    margin:-35px 35px -10px 35px;
+}
+.comment-row-container {
+    border-bottom: 1px solid #a09e9e73;
+}
+a.change-comment-status {
+    cursor: pointer;
+}
+
+/** 设置醒目提示颜色 */
+.eye-catching-reminder {
+    color: #ff6000;
+}
+
+/** 设备授权应查看详情页面，应用轮翻位置设置 */
+.carousel-indicators {
+    left: 0;
+    margin-left: 0;
+    margin-bottom: 0;
+    width: 100%;
+    bottom:6px;
+}
+
+.grant-app-tip {
+    margin-top: 10px;
+    color: red;
+}
+.status {
+    width: 60px;
+}
+
+#ugTreeTabContent {
+    overflow: auto;
+    position: absolute;
+    bottom: 0;
+    top: 64px;
+    width: 98%;
+}
+
+#ugTreeTabContent::-webkit-scrollbar{
+    width:3px;
+}
+#ugTreeTabContent::-webkit-scrollbar-thumb{
+    background: #6acaf0;
+}
+textarea{
+    resize:none;
+}
+.wifi-manage, .ui-device-manage, .authorize-app-manage {
+    width: 900px;
+    min-height: 120px;
+    position: relative;
+}
+#selected_ssid_container {
+    height: 82%;
+    overflow-y: scroll;
+}
+
+.ui-device-manage li div .device-setting-icon {
+    width: 47px;
+    height: 47px;
+    background-size: 300px;
+}
+
+.tactics-icons.wifi-icon {
+    background: url("/images/wifi-icon.png") no-repeat 0 0;
+    background-size: 56px;
+}
+.device-setting-icon.camera {
+    background: url("/images/device-setting-icon.png") no-repeat -1px 0;
+}
+.device-setting-icon.bluetooth {
+    background: url("/images/device-setting-icon.png") no-repeat -46px 0;
+}
+.device-setting-icon.usb {
+    background: url("/images/device-setting-icon.png") no-repeat -92px 0;
+}
+.device-setting-icon.wifi_switch {
+    background: url("/images/device-setting-icon.png") no-repeat -138px 0;
+}
+.device-setting-icon.phone_msg {
+    background: url("/images/device-setting-icon.png") no-repeat -186px 0;
+}
+.device-setting-icon.data_flow {
+    background: url("/images/device-setting-icon.png") no-repeat -232px 0;
+}
+.device-setting-icon.gps {
+    background: url("/images/device-setting-icon.png") no-repeat 0 -52px;
+}
+.device-setting-icon.wifi_advanced {
+    background: url("/images/device-setting-icon.png") no-repeat -46px -52px;
+}
+.device-setting-icon.sd_card {
+    background: url("/images/device-setting-icon.png") no-repeat -92px -52px;
+}
+.device-setting-icon.otg {
+    background: url("/images/device-setting-icon.png") no-repeat -138px -52px;
+}
+.device-setting-icon.recording {
+    background: url("/images/device-setting-icon.png") no-repeat -185px -52px;
+}
+.device-setting-icon.wifi_lock {
+    background: url("/images/wifi-lock.png") no-repeat center;
+    
+}
+.backgroud-border{
+    margin-left: -13px;
+    margin-top: 3.5px;
+    width: 42px;
+    height: 42px;
+    border:2.2px solid #6f97ab;
+    border-radius: 50%;
+}
+.switch {
+    top: 7px;
+    width: 63px;
+    height: 33px;
+    cursor: pointer;
+    background: url("/images/on-off.png") no-repeat -8px -25px;
+    background-size: 60px;
+    padding-left: 0;
+}
+.switch.selected {
+    background: url("/images/on-off.png") no-repeat -8px 0;
+    background-size: 60px;
+}
+.set-dm-padding {
+    padding: 14px 0 0 5px;
+}
+.ui-device-manage ul {
+    margin: 15px;
+    padding: 0;
+}
+span.glyphicon.glyphicon-pushpin, span.glyphicon.glyphicon-link {
+    top: -5px;
+}
+.warning-reminder {
+    font-size:12px;
+    color:#ff6000;
+}
+.btn_submit_login{
+    width: 50%;
+    height: 28px;
+}
+.btn_login_container {
+    text-align: center;
+}
+#login-form {
+    width: 85%;
+}
+.remember-container {
+    padding-left: 0;
+}
+.sms_verification_container{
+    text-align: right;
+    padding-right: 0;
+    margin-top: 4px;
+}
+.allow-active-code {
+    color: #3097d1;
+    cursor: pointer;
+}
+#show-select-period {
+    width: 676px;min-height: 60px;
+}
+.custom-small-warning {
+    font-size:12px;
+    color:#ff6000;
+}
