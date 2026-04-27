@@ -1,0 +1,308 @@
+{
+    "0": {
+        "timestamp": "2026-03-28 16:35:59",
+        "type": "get_file_info",
+        "request": {
+            "url": "http:\/\/162.14.113.207:5244\/api\/fs\/get",
+            "method": "POST",
+            "headers": {
+                "Authorization": "Bearer eyJhbGciOiJIUzI1NiIs...",
+                "Content-Type": "application\/json"
+            },
+            "body": {
+                "path": "\/main\/appstore\/1774686959_%E5%BA%94%E7%94%A8%E5%95%86%E5%BA%97_common_6.00.001.0.apk",
+                "password": ""
+            }
+        },
+        "response": {
+            "http_code": 200,
+            "body": {
+                "code": 401,
+                "message": "token is invalidated",
+                "data": null
+            },
+            "raw_body": "{\"code\":401,\"message\":\"token is invalidated\",\"data\":null}",
+            "time_ms": 1.74
+        },
+        "error": null
+    },
+    "1": {
+        "timestamp": "2026-03-28 16:35:59",
+        "type": "upload_file",
+        "request": {
+            "url": "http:\/\/162.14.113.207:5244\/api\/fs\/put",
+            "method": "PUT",
+            "headers": {
+                "Authorization": "Bearer eyJhbGciOiJIUzI1NiIs...",
+                "File-Path": "\/main\/appstore\/1774686959_%E5%BA%94%E7%94%A8%E5%95%86%E5%BA%97_common_6.00.001.0.apk",
+                "Overwrite": "true",
+                "X-File-Md5": "e764da8352663c2b916ce0b01fbad341",
+                "X-File-Sha1": "657786db8fcbbccc56649014bb6fe37ef867b084"
+            },
+            "body": {
+                "file": {
+                    "name": "1774686959_%E5%BA%94%E7%94%A8%E5%95%86%E5%BA%97_common_6.00.001.0.apk",
+                    "original_name": "应用商店_common_6.00.001.0.apk",
+                    "size": 12481912,
+                    "type": "application\/vnd.android.package-archive"
+                },
+                "path": "\/main\/appstore\/"
+            }
+        },
+        "response": {
+            "http_code": 200,
+            "body": {
+                "code": 401,
+                "message": "token is invalidated",
+                "data": null
+            },
+            "raw_body": "{\"code\":401,\"message\":\"token is invalidated\",\"data\":null}",
+            "time_ms": 1.18
+        },
+        "error": null
+    },
+    "2": {
+        "timestamp": "2026-03-28 16:35:59",
+        "type": "login",
+        "request": {
+            "url": "http:\/\/162.14.113.207:5244\/api\/auth\/login",
+            "method": "POST",
+            "headers": [
+                "Content-Type: application\/json"
+            ],
+            "body": {
+                "username": "admin",
+                "password": "123123123kik"
+            }
+        },
+        "response": {
+            "http_code": 200,
+            "body": {
+                "code": 200,
+                "message": "success",
+                "data": {
+                    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwicHdkX3RzIjowLCJleHAiOjE3NzQ4NTk3NTksIm5iZiI6MTc3NDY4Njk1OSwiaWF0IjoxNzc0Njg2OTU5fQ.ybVTc-s0sZPUwV3PCPHKbOWkBUxHuiHTYRPTAysH7mk"
+                }
+            },
+            "raw_body": "{\"code\":200,\"message\":\"success\",\"data\":{\"token\":\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwicHdkX3RzIjowLCJleHAiOjE3NzQ4NTk3NTksIm5iZiI6MTc3NDY4Njk1OSwiaWF0IjoxNzc0Njg2OTU5fQ.ybVTc-s0sZPUwV3PCPHKbOWkBUxHuiHTYRPTAysH7mk\"}}",
+            "time_ms": 2.91
+        },
+        "error": null
+    },
+    "3": {
+        "timestamp": "2026-03-28 16:34:13",
+        "type": "get_file_info",
+        "request": {
+            "url": "http:\/\/162.14.113.207:5244\/api\/fs\/get",
+            "method": "POST",
+            "headers": {
+                "Authorization": "Bearer eyJhbGciOiJIUzI1NiIs...",
+                "Content-Type": "application\/json"
+            },
+            "body": {
+                "path": "\/main\/appstore\/1774686853_%E5%BA%94%E7%94%A8%E5%95%86%E5%BA%97_common_6.00.001.0.apk",
+                "password": ""
+            }
+        },
+        "response": {
+            "http_code": 200,
+            "body": {
+                "code": 401,
+                "message": "token is invalidated",
+                "data": null
+            },
+            "raw_body": "{\"code\":401,\"message\":\"token is invalidated\",\"data\":null}",
+            "time_ms": 1.35
+        },
+        "error": null
+    },
+    "4": {
+        "timestamp": "2026-03-28 16:34:13",
+        "type": "upload_file",
+        "request": {
+            "url": "http:\/\/162.14.113.207:5244\/api\/fs\/put",
+            "method": "PUT",
+            "headers": {
+                "Authorization": "Bearer eyJhbGciOiJIUzI1NiIs...",
+                "File-Path": "\/main\/appstore\/1774686853_%E5%BA%94%E7%94%A8%E5%95%86%E5%BA%97_common_6.00.001.0.apk",
+                "Overwrite": "true",
+                "X-File-Md5": "e764da8352663c2b916ce0b01fbad341",
+                "X-File-Sha1": "657786db8fcbbccc56649014bb6fe37ef867b084"
+            },
+            "body": {
+                "file": {
+                    "name": "1774686853_%E5%BA%94%E7%94%A8%E5%95%86%E5%BA%97_common_6.00.001.0.apk",
+                    "original_name": "应用商店_common_6.00.001.0.apk",
+                    "size": 12481912,
+                    "type": "application\/vnd.android.package-archive"
+                },
+                "path": "\/main\/appstore\/"
+            }
+        },
+        "response": {
+            "http_code": 200,
+            "body": {
+                "code": 401,
+                "message": "token is invalidated",
+                "data": null
+            },
+            "raw_body": "{\"code\":401,\"message\":\"token is invalidated\",\"data\":null}",
+            "time_ms": 1.58
+        },
+        "error": null
+    },
+    "5": {
+        "timestamp": "2026-03-28 16:34:13",
+        "type": "login",
+        "request": {
+            "url": "http:\/\/162.14.113.207:5244\/api\/auth\/login",
+            "method": "POST",
+            "headers": [
+                "Content-Type: application\/json"
+            ],
+            "body": {
+                "username": "admin",
+                "password": "123123123kik"
+            }
+        },
+        "response": {
+            "http_code": 200,
+            "body": {
+                "code": 200,
+                "message": "success",
+                "data": {
+                    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwicHdkX3RzIjowLCJleHAiOjE3NzQ4NTk2NTMsIm5iZiI6MTc3NDY4Njg1MywiaWF0IjoxNzc0Njg2ODUzfQ.Qna96HepgyBwtqT6Ar0CV3LZSY6ZC5SUrx-emfRhIYc"
+                }
+            },
+            "raw_body": "{\"code\":200,\"message\":\"success\",\"data\":{\"token\":\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwicHdkX3RzIjowLCJleHAiOjE3NzQ4NTk2NTMsIm5iZiI6MTc3NDY4Njg1MywiaWF0IjoxNzc0Njg2ODUzfQ.Qna96HepgyBwtqT6Ar0CV3LZSY6ZC5SUrx-emfRhIYc\"}}",
+            "time_ms": 2.25
+        },
+        "error": null
+    },
+    "6": {
+        "timestamp": "2026-03-28 16:20:28",
+        "type": "get_file_info",
+        "request": {
+            "url": "http:\/\/162.14.113.207:5244\/api\/fs\/get",
+            "method": "POST",
+            "headers": {
+                "Authorization": "Bearer eyJhbGciOiJIUzI1NiIs...",
+                "Content-Type": "application\/json"
+            },
+            "body": {
+                "path": "\/main\/appstore\/1774686028_%E5%BA%94%E7%94%A8%E5%95%86%E5%BA%97_common_6.00.001.0.apk",
+                "password": ""
+            }
+        },
+        "response": {
+            "http_code": 200,
+            "body": {
+                "code": 401,
+                "message": "token is invalidated",
+                "data": null
+            },
+            "raw_body": "{\"code\":401,\"message\":\"token is invalidated\",\"data\":null}",
+            "time_ms": 1.86
+        },
+        "error": null
+    },
+    "7": {
+        "timestamp": "2026-03-28 16:20:28",
+        "type": "upload_file",
+        "request": {
+            "url": "http:\/\/162.14.113.207:5244\/api\/fs\/form",
+            "method": "POST",
+            "headers": {
+                "Authorization": "Bearer eyJhbGciOiJIUzI1NiIs..."
+            },
+            "body": {
+                "file": {
+                    "name": "1774686028_%E5%BA%94%E7%94%A8%E5%95%86%E5%BA%97_common_6.00.001.0.apk",
+                    "original_name": "应用商店_common_6.00.001.0.apk",
+                    "size": 12481912,
+                    "type": "application\/vnd.android.package-archive"
+                },
+                "path": "\/main\/appstore\/"
+            }
+        },
+        "response": {
+            "http_code": 200,
+            "body": null,
+            "raw_body": "<!doctype html>\n<html lang=\"en\" translate=\"no\">\n  <head>\n    <style>\n.hope-ui-light {\n    background-image: url(\"http:\/\/162.14.113.207:8898\/launcher_bg.jpg\") !important;\n    background-repeat: no-repeat;\n    background-size: cover;\n    background-attachment: fixed;\n    background-position-x: center;\n}\n\/* 全局控件透明化（磨砂效果） *\/\n.hope-c-PJLV-igScBhH-css, .header, .obj-box {\n  background-color: rgba(255, 255, 255, 0.4) !important;\n  backdrop-filter: blur(10px) !important;\n}\n.obj-box, .header {\n  background-color: transparent !important;\n  backdrop-filter: blur(20px) saturate(1.4) !important;\n  box-shadow: inset 1px 1px 0px 0px rgba(255,255,255,0.5) !important;\n}\n<\/style>\n    <meta charset=\"utf-8\" >\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" >\n    <meta name=\"referrer\" content=\"same-origin\" >\n    <meta name=\"generator\" content=\"OpenList\" >\n    <meta name=\"theme-color\" content=\"#000000\" >\n    <meta name=\"google\" content=\"notranslate\" >\n    <link href=\"\/manifest.json\" rel=\"manifest\" >\n    <meta name=\"apple-mobile-web-app-capable\" content=\"yes\" >\n    <meta name=\"apple-mobile-web-app-title\" content=\"OpenList\" >\n    <link rel=\"apple-touch-icon\" href=\"https:\/\/res.oplist.org\/logo\/logo.svg\" >\n    <link       rel=\"shortcut icon\"\n      type=\"image\/ico\"\n      href=\"https:\/\/res.oplist.org\/logo\/logo.svg\"\n    >\n    <title>CDPTSJM<\/title>\n    <script>\n      window.OPENLIST_CONFIG = {\n        cdn: '',\n        base_path: '\/',\n        api: undefined,\n        main_color: '#1890ff',\n      }\n      window.__dynamic_base__ = window.OPENLIST_CONFIG.cdn || \"\"\n    <\/script>\n    \n    \n    <script type=\"module\">import.meta.url;import(\"_\").catch(()=>1);(async function*(){})().next();if(location.protocol!=\"file:\"){window.__vite_is_modern_browser=true}<\/script>\n    <script type=\"module\">!function(){if(window.__vite_is_modern_browser)return;console.warn(\"vite: loading legacy chunks, syntax error above and the same error below should be ignored\");var e=document.getElementById(\"vite-legacy-polyfill\"),n=document.createElement(\"script\");n.src=  window.__dynamic_base__+e.getAttribute('data-src'),n.onload=function(){System.import(  window.__dynamic_base__+document.getElementById('vite-legacy-entry').getAttribute('data-src'))},document.body.appendChild(n)}();<\/script>\n  <\/head>\n  <body>\n    <noscript>You need to enable JavaScript to run this app.<\/noscript>\n    <div id=\"root\"><\/div>\n\n    \n    <script nomodule>!function(){var e=document,t=e.createElement(\"script\");if(!(\"noModule\"in t)&&\"onbeforeload\"in t){var n=!1;e.addEventListener(\"beforeload\",(function(e){if(e.target===t)n=!0;else if(!e.target.hasAttribute(\"nomodule\")||!n)return;e.preventDefault()}),!0),t.type=\"module\",t.src=\".\",e.head.appendChild(t),t.remove()}}();<\/script>\n    \n    <script nomodule crossorigin id=\"vite-legacy-entry\" data-src=\"\/assets\/index-legacy-YtBw8_E8.js\"><\/script>\n    <script>\n(function(){\nvar preloads = [{\"parentTagName\":\"head\",\"tagName\":\"script\",\"attrs\":{\"type\":\"module\",\"crossorigin\":\"\",\"src\":\"\/assets\/index-SQ0wiswX.js\"}},{\"parentTagName\":\"head\",\"tagName\":\"link\",\"attrs\":{\"rel\":\"stylesheet\",\"crossorigin\":\"\",\"href\":\"\/assets\/index-DYLAoZjS.css\"}},{\"parentTagName\":\"body\",\"tagName\":\"script\",\"attrs\":{\"nomodule\":\"\",\"crossorigin\":\"\",\"id\":\"vite-legacy-polyfill\",\"src\":\"\/assets\/polyfills-legacy-fFt7otW2.js\"}}];\nfunction setAttribute(target, attrs) {\nfor (var key in attrs) {\n  target.setAttribute(key, attrs[key]);\n}\nreturn target;\n};\nfor(var i = 0; i < preloads.length; i++){\nvar item = preloads[i]\nvar childNode = document.createElement(item.tagName);\nsetAttribute(childNode, item.attrs)\nif(  window.__dynamic_base__) {\n  if(item.tagName == 'link') {\n    setAttribute(childNode, { href:   window.__dynamic_base__ + item.attrs.href })\n  } else if (item.tagName == 'script') {\n    setAttribute(childNode, { src:   window.__dynamic_base__ + item.attrs.src })\n  }\n}\ndocument.getElementsByTagName(item.parentTagName)[0].appendChild(childNode);\n}\n})();\n<\/script>\n<\/body>\n\n<\/html>\n",
+            "time_ms": 1.25
+        },
+        "error": null
+    },
+    "8": {
+        "timestamp": "2026-03-28 16:20:28",
+        "type": "login",
+        "request": {
+            "url": "http:\/\/162.14.113.207:5244\/api\/auth\/login",
+            "method": "POST",
+            "headers": [
+                "Content-Type: application\/json"
+            ],
+            "body": {
+                "username": "admin",
+                "password": "123123123kik"
+            }
+        },
+        "response": {
+            "http_code": 200,
+            "body": {
+                "code": 200,
+                "message": "success",
+                "data": {
+                    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwicHdkX3RzIjowLCJleHAiOjE3NzQ4NTg4MjgsIm5iZiI6MTc3NDY4NjAyOCwiaWF0IjoxNzc0Njg2MDI4fQ.etXukz7Hktrf07744FWm5urijLo5bh0EMVBpG2a_MRI"
+                }
+            },
+            "raw_body": "{\"code\":200,\"message\":\"success\",\"data\":{\"token\":\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwicHdkX3RzIjowLCJleHAiOjE3NzQ4NTg4MjgsIm5iZiI6MTc3NDY4NjAyOCwiaWF0IjoxNzc0Njg2MDI4fQ.etXukz7Hktrf07744FWm5urijLo5bh0EMVBpG2a_MRI\"}}",
+            "time_ms": 1.27
+        },
+        "error": null
+    },
+    "timestamp": "2026-03-28 16:09:07",
+    "action": "proxy_upload_openlist",
+    "request": {
+        "method": "POST",
+        "uri": "\/api.php",
+        "headers": {
+            "Cookie": "X_CACHE_KEY=40032333ffe82724a7d316fae479ccb3; 9edcca951bf23bc246665b562bd77891_ssl=PjizkyhEkUs1-wT8AZYZ7Y-9zTAqt6SsYc4C6R7WYgE.8CzsdoPO2AhDCsSGdRDqwqdWd3Q; uname=cdptsjm0000; https_Path=%2Fwww%2Fwwwroot%2Fcdptsjm.top%2Fdisk%2Flinspirersever; PHPSESSID=8e2e58991564784cec75025c5566d272",
+            "Priority": "u=1, i",
+            "Accept-Language": "zh-CN,zh;q=0.9",
+            "Accept-Encoding": "gzip, deflate, br, zstd",
+            "Referer": "https:\/\/162.14.113.207:883\/index.php?tab=link",
+            "Sec-Fetch-Dest": "empty",
+            "Sec-Fetch-Mode": "cors",
+            "Sec-Fetch-Site": "same-origin",
+            "Origin": "https:\/\/162.14.113.207:883",
+            "Accept": "*\/*",
+            "Sec-Ch-Ua-Mobile": "?0",
+            "Content-Type": "multipart\/form-data; boundary=----WebKitFormBoundary4iEOPswDLETBOmbf",
+            "Sec-Ch-Ua": "\"Chromium\";v=\"146\", \"Not-A.Brand\";v=\"24\", \"Microsoft Edge\";v=\"146\"",
+            "User-Agent": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/146.0.0.0 Safari\/537.36 Edg\/146.0.0.0",
+            "Sec-Ch-Ua-Platform": "\"Windows\"",
+            "Cache-Control": "no-cache",
+            "Pragma": "no-cache",
+            "Content-Length": "12482419",
+            "Host": "162.14.113.207"
+        },
+        "files": {
+            "name": "应用商店_common_6.00.001.0.apk",
+            "type": "application\/vnd.android.package-archive",
+            "size": 12481912,
+            "error": 0
+        },
+        "post": {
+            "action": "proxy_upload_openlist",
+            "token": "cecbb85e12f5ac45c698f111a238358818db5bad50f267bc75b2e91b097fd5cf"
+        }
+    },
+    "response": {
+        "success": true,
+        "url": "http:\/\/162.14.113.207:5244\/d\/main\/appstore\/1774685347_%E5%BA%94%E7%94%A8%E5%95%86%E5%BA%97_common_6.00.001.0.apk",
+        "filename": "1774685347_%E5%BA%94%E7%94%A8%E5%95%86%E5%BA%97_common_6.00.001.0.apk",
+        "path": "\/main\/appstore\/1774685347_%E5%BA%94%E7%94%A8%E5%95%86%E5%BA%97_common_6.00.001.0.apk",
+        "warning": "未能获取签名"
+    }
+}
