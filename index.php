@@ -1,6 +1,6 @@
 <?php
 session_start();
-header('X-Accel-Buffering: no');  // 告诉 Nginx 不要缓冲
+header('X-Accel-Buffering: no');
 require_once 'lang.php';
 $currentLang = isset($_GET['lang']) ? $_GET['lang'] : ''; 
 
@@ -8,46 +8,105 @@ if (isset($_GET['lang'])) {
     Lang::setLang($_GET['lang']);
 }
 
-// 检查登录状态
+// ========== 持久登录恢复（网页 + 应用） ==========
+define('REMEMBER_SECRET', 'cdptsjm-persistent-login-secret-2026');
+
+if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
+    // 1. 先检查 remember_auth Cookie（网页持久登录 + 应用登录共用）
+    if (!empty($_COOKIE['remember_auth'])) {
+        $users = json_decode(file_get_contents('data/user.json'), true);
+        $parts = explode(':', base64_decode($_COOKIE['remember_auth']));
+        if (count($parts) === 3) {
+            list($cookieUser, $expires, $token) = $parts;
+            if ($expires >= time()) {
+                foreach ($users as $user) {
+                    if ($user['email'] === $cookieUser) {
+                        $expected = hash_hmac('sha256', $cookieUser . '|' . $user['key'] . '|' . $expires, REMEMBER_SECRET);
+                        if (hash_equals($expected, $token)) {
+                            if (isset($user['status']) && $user['status'] == 1) {
+                                $_SESSION['authenticated'] = true;
+                                $_SESSION['username'] = $cookieUser;
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+// 2. 应用登录模式：若检测到 app_login=1 且已恢复登录，确保 Session Cookie 长期有效
+if (isset($_SESSION['authenticated']) && $_SESSION['authenticated'] === true
+    && !empty($_COOKIE['app_login']) && $_COOKIE['app_login'] === '1') {
+    // 应用登录模式下，刷新 Session Cookie 为长期有效（30天）
+    // 确保应用下次启动时 session 仍然有效
+    setcookie(session_name(), session_id(), [
+        'expires' => time() + 30 * 24 * 3600,
+        'path' => '/',
+        'secure' => true,
+        'httponly' => true,
+        'samesite' => 'Strict'
+    ]);
+}
+// ===============================
+
+// 检查登录状态（恢复后再次检查）
 if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
     header('Location: login.php');
     exit;
 }
 
-// 检查用户是否被禁用
+// 检查用户是否被禁用（原有逻辑完全保留）
 $currentUser = $_SESSION['username'] ?? '';
 $users = json_decode(file_get_contents('data/user.json'), true);
-$userDisabled = true; // 默认禁用，找不到用户也视为禁用
+$userDisabled = true;
 
 foreach ($users as $user) {
     if ($user['email'] === $currentUser) {
         if (isset($user['status']) && $user['status'] == 1) {
-            $userDisabled = false; // 状态正常
+            $userDisabled = false;
         }
         break;
     }
 }
 
-// 如果用户被禁用，清除登录状态并跳转
 if ($userDisabled) {
-    // 清除所有会话数据
+    // 检测是否为应用登录
+    $isAppLogin = isset($_COOKIE['app_login']) && $_COOKIE['app_login'] === '1';
+
     $_SESSION = array();
-    
-    // 销毁会话 Cookie
     if (isset($_COOKIE[session_name()])) {
         setcookie(session_name(), '', time() - 3600, '/');
     }
-    
-    // 销毁会话
+    if (isset($_COOKIE['remember_auth'])) {
+        setcookie('remember_auth', '', time() - 3600, '/');
+    }
+    // 清除应用登录标记
+    if (isset($_COOKIE['app_login'])) {
+        setcookie('app_login', '', time() - 3600, '/');
+    }
     session_destroy();
-    
-    // 显示提示并跳转登录页
-    echo "<script>
-        alert('" . (Lang::get('账号已被禁用，请联系管理员', $lang) ?? '您的账号已被禁用，请联系管理员') . "');
-        window.location.href = 'login.php';
-    </script>";
+
+    if ($isAppLogin) {
+        // 应用登录用户被禁用：重定向到带 app_logout=1 的登录页
+        // Android WebView 会拦截此 URL，清除 XML 并跳转到原生登录 Activity
+        echo "<script>
+            alert('" . (Lang::get('账号已被禁用，请联系管理员', $lang) ?? '您的账号已被禁用，请联系管理员') . "');
+            window.location.href = 'login.php?app_logout=1';
+        </script>";
+      //  header('Location: login.php?app_logout=1');
+    } else {
+        // 网页登录用户被禁用：保持原有弹窗提示
+        echo "<script>
+            alert('" . (Lang::get('账号已被禁用，请联系管理员', $lang) ?? '您的账号已被禁用，请联系管理员') . "');
+            window.location.href = 'login.php';
+        </script>";
+    }
     exit;
 }
+// ... 后续原有代码不变
+
 
 
 
@@ -63,6 +122,7 @@ $advertiseData = json_decode(file_get_contents('data/advertise.json'), true);
 $appgroupData = json_decode(file_get_contents('data/appgroups.json'), true);
 $limitData = json_decode(file_get_contents('data/limit.json'), true);
 $componentData = json_decode(file_get_contents('data/setting.json'), true);
+$bookmarkData = json_decode(file_get_contents('data/lsllq.json'), true) ?? [];
 
 $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 ?>
@@ -101,215 +161,233 @@ $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 .progress-error { background: linear-gradient(90deg, #d9534f 0%, #c9302c 100%) !important; }
 /* 上传中状态 */
 .progress-active { background: linear-gradient(90deg, #5bc0de 0%, #46b8da 100%) !important; }
-</style>
-    <style>
-    
-    /* 表格容器 - 自适应宽度，禁止横向滚动 */
-    .tab-content-wrapper {
-        width: 100%;
-        overflow-x: hidden; /* 禁止横向溢出 */
-    }
-    
-    /* 表格基础样式 - 自适应布局 */
+
+/* 表格容器 - 自适应宽度，禁止横向滚动 */
+.tab-content-wrapper {
+    width: 100%;
+    overflow-x: hidden; /* 禁止横向溢出 */
+}
+
+/* 表格基础样式 - 自适应布局 */
+.data-table {
+    width: 100%;
+    table-layout: fixed; /* 固定表格布局，允许控制列宽 */
+    border-collapse: collapse;
+    word-wrap: break-word; /* 长单词换行 */
+}
+
+/* 表头样式 */
+.data-table thead th {
+    background-color: #f5f5f5;
+    font-weight: 600;
+    border-bottom: 2px solid #ddd;
+    padding: 10px 8px;
+    text-align: left;
+    font-size: 1.0em;
+    white-space: nowrap; /* 表头不换行 */
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* 单元格基础样式 */
+.data-table tbody td {
+    padding: 10px 8px;
+    border-bottom: 1px solid #eee;
+    vertical-align: middle;
+    font-size: 1.0em;
+}
+
+/* 列宽定义 - 应用商店表格 */
+.data-table th:nth-child(1), /* ID */
+.data-table td:nth-child(1) {
+    width: 50px;
+    text-align: center;
+}
+
+.data-table th:nth-child(2), /* 图标 */
+.data-table td:nth-child(2) {
+    width: 50px;
+    text-align: center;
+}
+
+.data-table th:nth-child(3), /* 名称 */
+.data-table td:nth-child(3) {
+    width: 15%;
+    max-width: 150px;
+}
+
+.data-table th:nth-child(4), /* 包名 */
+.data-table td:nth-child(4) {
+    width: 20%;
+    max-width: 200px;
+    font-family: monospace;
+    font-size: 1.0em;
+}
+
+.data-table th:nth-child(5), /* 版本名 */
+.data-table td:nth-child(5),
+.data-table th:nth-child(6), /* 版本号 */
+.data-table td:nth-child(6) {
+    width: 10%;
+    text-align: center;
+}
+
+.data-table th:nth-child(7), /* 隐藏 */
+.data-table td:nth-child(7),
+.data-table th:nth-child(8), /* 可卸载 */
+.data-table td:nth-child(8),
+.data-table th:nth-child(9), /* 强制 */
+.data-table td:nth-child(9) {
+    width: 8%;
+    text-align: center;
+}
+
+.data-table th:nth-child(10), /* 操作 */
+.data-table td:nth-child(10) {
+    width: 100px;
+    text-align: center;
+}
+
+/* 长文本截断显示省略号 */
+.data-table td:nth-child(3), /* 名称 */
+.data-table td:nth-child(4) { /* 包名 */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* 鼠标悬停时显示完整内容（tooltip效果） */
+.data-table td:nth-child(3):hover,
+.data-table td:nth-child(4):hover {
+    overflow: visible;
+    white-space: normal;
+    word-break: break-all;
+    background-color: #f9f9f9;
+    position: relative;
+    z-index: 1;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* 设备配置表格列宽 */
+#deviceAppTableBody td:nth-child(1),
+#deviceAppTableBody td:nth-child(1) {
+    width: 50px;
+}
+
+/* 用户配置表格列宽 */
+#userTable th:nth-child(4), /* 学校 */
+#userTable td:nth-child(4),
+#userTable th:nth-child(5), /* 用户组 */
+#userTable td:nth-child(5) {
+    max-width: 150px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* 用户配置表格：操作栏（第9列）始终显示，覆盖全局响应式 */
+#userTable th:nth-child(9),
+#userTable td:nth-child(9) {
+    display: table-cell !important;
+    width: 100px;
+    text-align: center;
+}
+
+/* 链接配置表格 */
+#linkTableBody td:nth-child(3) { /* URL */
+    max-width: 250px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-family: monospace;
+    font-size: 0.85em;
+}
+
+/* 状态徽章 */
+.status-badge {
+    display: inline-block;
+    padding: 3px 6px;
+    border-radius: 3px;
+    font-size: 0.8em;
+    white-space: nowrap;
+}
+
+.status-enabled {
+    background-color: #5cb85c;
+    color: white;
+}
+
+.status-disabled {
+    background-color: #d9534f;
+    color: white;
+}
+
+/* 应用图标 */
+.app-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 4px;
+    object-fit: cover;
+}
+
+/* 操作按钮 */
+.btn-action {
+    padding: 4px 8px;
+    font-size: 1.0em;
+    margin: 0 2px;
+}
+
+/* 小屏幕适配 */
+@media screen and (max-width: 1200px) {
     .data-table {
-        width: 100%;
-        table-layout: fixed; /* 固定表格布局，允许控制列宽 */
-        border-collapse: collapse;
-        word-wrap: break-word; /* 长单词换行 */
-    }
-    
-    /* 表头样式 */
-    .data-table thead th {
-        background-color: #f5f5f5;
-        font-weight: 600;
-        border-bottom: 2px solid #ddd;
-        padding: 10px 8px;
-        text-align: left;
-        font-size: 1.0em;
-        white-space: nowrap; /* 表头不换行 */
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-    
-    /* 单元格基础样式 */
-    .data-table tbody td {
-        padding: 10px 8px;
-        border-bottom: 1px solid #eee;
-        vertical-align: middle;
-        font-size: 1.0em;
-    }
-    
-    /* 列宽定义 - 应用商店表格 */
-    .data-table th:nth-child(1), /* ID */
-    .data-table td:nth-child(1) {
-        width: 50px;
-        text-align: center;
-    }
-    
-    .data-table th:nth-child(2), /* 图标 */
-    .data-table td:nth-child(2) {
-        width: 50px;
-        text-align: center;
-    }
-    
-    .data-table th:nth-child(3), /* 名称 */
-    .data-table td:nth-child(3) {
-        width: 15%;
-        max-width: 150px;
-    }
-    
-    .data-table th:nth-child(4), /* 包名 */
-    .data-table td:nth-child(4) {
-        width: 20%;
-        max-width: 200px;
-        font-family: monospace;
-        font-size: 1.0em;
-    }
-    
-    .data-table th:nth-child(5), /* 版本名 */
-    .data-table td:nth-child(5),
-    .data-table th:nth-child(6), /* 版本号 */
-    .data-table td:nth-child(6) {
-        width: 10%;
-        text-align: center;
-    }
-    
-    .data-table th:nth-child(7), /* 隐藏 */
-    .data-table td:nth-child(7),
-    .data-table th:nth-child(8), /* 可卸载 */
-    .data-table td:nth-child(8),
-    .data-table th:nth-child(9), /* 强制 */
-    .data-table td:nth-child(9) {
-        width: 8%;
-        text-align: center;
-    }
-    
-    .data-table th:nth-child(10), /* 操作 */
-    .data-table td:nth-child(10) {
-        width: 100px;
-        text-align: center;
-    }
-    
-    /* 长文本截断显示省略号 */
-    .data-table td:nth-child(3), /* 名称 */
-    .data-table td:nth-child(4) { /* 包名 */
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-    
-    /* 鼠标悬停时显示完整内容（tooltip效果） */
-    .data-table td:nth-child(3):hover,
-    .data-table td:nth-child(4):hover {
-        overflow: visible;
-        white-space: normal;
-        word-break: break-all;
-        background-color: #f9f9f9;
-        position: relative;
-        z-index: 1;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-    
-    /* 设备配置表格列宽 */
-    #deviceAppTableBody td:nth-child(1),
-    #deviceAppTableBody td:nth-child(1) {
-        width: 50px;
-    }
-    
-    /* 用户配置表格列宽 */
-    #userTableBody td:nth-child(4), /* 学校 */
-    #userTableBody td:nth-child(5) { /* 用户组 */
-        max-width: 150px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-    
-    /* 链接配置表格 */
-    #linkTableBody td:nth-child(3) { /* URL */
-        max-width: 250px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        font-family: monospace;
         font-size: 0.85em;
     }
     
-    /* 状态徽章 */
-    .status-badge {
-        display: inline-block;
-        padding: 3px 6px;
-        border-radius: 3px;
-        font-size: 0.8em;
-        white-space: nowrap;
+    .data-table th,
+    .data-table td {
+        padding: 8px 6px;
     }
     
-    .status-enabled {
-        background-color: #5cb85c;
-        color: white;
+    /* 超小屏幕隐藏次要列 */
+    .data-table th:nth-child(6), /* 版本号 */
+    .data-table td:nth-child(6),
+    .data-table th:nth-child(9), /* 强制状态 */
+    .data-table td:nth-child(9) {
+        display: none;
+    }
+}
+
+/* 用户配置表格：空间不足时优先隐藏学校/用户组 */
+@media screen and (max-width: 1000px) {
+    #userTable th:nth-child(4), /* 学校 */
+    #userTable td:nth-child(4),
+    #userTable th:nth-child(5), /* 用户组 */
+    #userTable td:nth-child(5) {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .content-area {
+        padding: 10px;
     }
     
-    .status-disabled {
-        background-color: #d9534f;
-        color: white;
+    /* 更小屏幕隐藏更多列 */
+    .data-table th:nth-child(5), /* 版本名 */
+    .data-table td:nth-child(5),
+    .data-table th:nth-child(8), /* 可卸载 */
+    .data-table td:nth-child(8) {
+        display: none;
     }
     
-    /* 应用图标 */
-    .app-icon {
-        width: 32px;
-        height: 32px;
-        border-radius: 4px;
-        object-fit: cover;
-    }
-    
-    /* 操作按钮 */
     .btn-action {
-        padding: 4px 8px;
-        font-size: 1.0em;
-        margin: 0 2px;
+        display: block;
+        margin: 2px 0;
+        width: 100%;
     }
-    
-    /* 小屏幕适配 */
-    @media screen and (max-width: 1200px) {
-        .data-table {
-            font-size: 0.85em;
-        }
-        
-        .data-table th,
-        .data-table td {
-            padding: 8px 6px;
-        }
-        
-        /* 超小屏幕隐藏次要列 */
-        .data-table th:nth-child(6), /* 版本号 */
-        .data-table td:nth-child(6),
-        .data-table th:nth-child(9), /* 强制状态 */
-        .data-table td:nth-child(9) {
-            display: none;
-        }
-    }
-    
-    @media screen and (max-width: 768px) {
-        .content-area {
-            padding: 10px;
-        }
-        
-        /* 更小屏幕隐藏更多列 */
-        .data-table th:nth-child(5), /* 版本名 */
-        .data-table td:nth-child(5),
-        .data-table th:nth-child(8), /* 可卸载 */
-        .data-table td:nth-child(8) {
-            display: none;
-        }
-        
-        .btn-action {
-            display: block;
-            margin: 2px 0;
-            width: 100%;
-        }
-    }
-    
-    /* 应用限制样式 */
+}
+
+/* 应用限制样式 */
 .time-slot {
     display: inline-flex;
     align-items: center;
@@ -343,8 +421,7 @@ $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
     padding: 2px 4px;
     font-size: 12px;
 }
-        
-    </style>
+</style>
 </head>
 <body>
 <div class="main-container">
@@ -686,7 +763,7 @@ $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
                         <span class="glyphicon glyphicon-plus"></span> <?php echo Lang::get('add_user', $lang); ?>
                     </button>
                 </div>
-                <table class="data-table">
+                <table class="data-table" id="userTable">
                     <thead>
                         <tr>
                             <th>ID</th>
@@ -844,15 +921,6 @@ $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
         <button class="btn btn-primary" onclick="openBrowserModal()">
             <span class="glyphicon glyphicon-plus"></span> <?php echo Lang::get('add_bookmark', $lang); ?>
         </button>
-        <!--<button class="btn btn-success" onclick="saveAllBookmarks()">-->
-        <!--    <span class="glyphicon glyphicon-save"></span> <?php echo Lang::get('save_all', $lang); ?>-->
-        <!--</button>-->
-        <button class="btn btn-info" onclick="exportBookmarks()">
-            <span class="glyphicon glyphicon-export"></span> <?php echo Lang::get('export_bookmarks', $lang); ?>
-        </button>
-        <button class="btn btn-warning" onclick="importBookmarks()">
-            <span class="glyphicon glyphicon-import"></span> <?php echo Lang::get('import_bookmarks', $lang); ?>
-        </button>
     </div>
     
     <div class="table-responsive">
@@ -894,64 +962,11 @@ $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
                                    placeholder="https://www.example.com">
                         </div>
                     </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label><?php echo Lang::get('test_url', $lang); ?></label>
-                            <button type="button" class="btn btn-info btn-sm" onclick="testBookmarkUrl()">
-                                <span class="glyphicon glyphicon-link"></span> <?php echo Lang::get('test', $lang); ?>
-                            </button>
-                        </div>
-                    </div>
                 </form>
             </div>
             <div class="modal-footer">
                 <button class="btn btn-default" onclick="closeModal('browserModal')"><?php echo Lang::get('cancel', $lang); ?></button>
                 <button class="btn btn-primary" onclick="saveBookmark()"><?php echo Lang::get('submit', $lang); ?></button>
-            </div>
-        </div>
-    </div>
-    
-    <!-- 导入书签模态框 -->
-    <div id="importBookmarkModal" class="modal-overlay">
-        <div class="modal-content" style="max-width: 500px;">
-            <div class="modal-header">
-                <h4><?php echo Lang::get('import_bookmarks', $lang); ?></h4>
-            </div>
-            <div class="modal-body">
-                <div class="form-row">
-                    <div class="form-group" style="flex: 2;">
-                        <label><?php echo Lang::get('import_method', $lang); ?></label>
-                        <select id="bookmarkImportMethod" onchange="toggleBookmarkImportMethod()">
-                            <option value="file"><?php echo Lang::get('upload_file', $lang); ?></option>
-                            <option value="text"><?php echo Lang::get('paste_json', $lang); ?></option>
-                        </select>
-                    </div>
-                </div>
-                
-                <div id="bookmarkImportFileDiv" class="form-row">
-                    <div class="form-group" style="flex: 2;">
-                        <label><?php echo Lang::get('select_json_file', $lang); ?></label>
-                        <input type="file" id="bookmarkImportFile" accept=".json,application/json">
-                    </div>
-                </div>
-                
-                <div id="bookmarkImportTextDiv" class="form-row" style="display: none;">
-                    <div class="form-group" style="flex: 2;">
-                        <label><?php echo Lang::get('paste_json_here', $lang); ?></label>
-                        <textarea id="bookmarkImportText" class="form-control" rows="8" placeholder='[{"name":"Google","url":"https://www.google.com"}]'></textarea>
-                    </div>
-                </div>
-                
-                <div class="form-row checkbox-group">
-                    <label>
-                        <input type="checkbox" id="bookmarkImportMerge" checked> 
-                        <?php echo Lang::get('merge_with_existing', $lang); ?>
-                    </label>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-default" onclick="closeModal('importBookmarkModal')"><?php echo Lang::get('cancel', $lang); ?></button>
-                <button class="btn btn-primary" onclick="processBookmarkImport()"><?php echo Lang::get('import', $lang); ?></button>
             </div>
         </div>
     </div>
@@ -1775,6 +1790,14 @@ $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 <script src="js/bootstrap-dialog.min.js"></script>
 <script src="js/jquery.cookie.js"></script>
 <script>
+//let bookmarkData = <?php echo json_encode($bookmarkData); ?>;
+// let originalBookmarkData = JSON.parse(JSON.stringify(<?php echo json_encode($bookmarkData); ?>));
+// let bookmarksLoaded = true;
+
+// // 立即渲染书签表格（如果当前在浏览器标签页）
+// if (document.getElementById('browserTableBody')) {
+//     renderBookmarkTable();
+// }
 // const { ipcRenderer } = require('electron');
 const CSRF_TOKEN = '<?php echo $_SESSION['csrf_token']; ?>';
 const LANG = '<?php echo $lang; ?>';
@@ -1953,14 +1976,9 @@ function refreshData() {
         if (!confirm(confirmMsg)) return;
     }
     
-    // 重要：在刷新前保存当前书签数据到临时变量
-    const currentBookmarkData = bookmarkData && bookmarkData.length > 0 ? JSON.parse(JSON.stringify(bookmarkData)) : null;
-    
-    // 重置未保存标记
     hasUnsavedChanges = false;
     resetSaveButton();
     
-    // 从服务器获取最新数据
     $.ajax({
         url: 'api.php',
         method: 'POST',
@@ -1971,7 +1989,7 @@ function refreshData() {
         contentType: 'application/json',
         success: function(res) {
             if (res.success) {
-                // 更新本地数据
+                // 更新所有本地数据
                 if (res.app) appData = res.app;
                 if (res.device) deviceData = res.device;
                 if (res.user) userData = res.user;
@@ -1980,27 +1998,22 @@ function refreshData() {
                 if (res.appgroup) appgroupData = res.appgroup;
                 if (res.limit) limitData = res.limit;
                 
-                // 关键修复：处理书签数据
-                if (res.bookmarks !== undefined && res.bookmarks !== null) {
-                    // 如果服务器返回了书签数据，使用服务器的
+                // 统一处理书签数据
+                if (res.bookmarks !== undefined) {
                     bookmarkData = Array.isArray(res.bookmarks) ? res.bookmarks : [];
-                } else if (currentBookmarkData && currentBookmarkData.length > 0) {
-                    // 如果服务器没有返回书签数据但本地有，保留本地的
-                    console.warn('Server did not return bookmarks, keeping local data');
-                    bookmarkData = currentBookmarkData;
                 } else {
                     bookmarkData = [];
                 }
                 originalBookmarkData = JSON.parse(JSON.stringify(bookmarkData));
                 
-                // 更新原始数据副本
-                originalAppData = JSON.parse(JSON.stringify(appData));
-                originalDeviceData = JSON.parse(JSON.stringify(deviceData));
-                originalUserData = JSON.parse(JSON.stringify(userData));
-                originalLinkData = JSON.parse(JSON.stringify(linkData));
-                originalAdvertiseData = JSON.parse(JSON.stringify(advertiseData));
-                originalAppgroupData = JSON.parse(JSON.stringify(appgroupData));
-                originalLimitData = JSON.parse(JSON.stringify(limitData));
+                // 更新其他原始数据
+                Object.assign(originalAppData, JSON.parse(JSON.stringify(appData)));
+                Object.assign(originalDeviceData, JSON.parse(JSON.stringify(deviceData)));
+                Object.assign(originalUserData, JSON.parse(JSON.stringify(userData)));
+                Object.assign(originalAdvertiseData, JSON.parse(JSON.stringify(advertiseData)));
+                Object.assign(originalAppgroupData, JSON.parse(JSON.stringify(appgroupData)));
+                Object.assign(originalLinkData, JSON.parse(JSON.stringify(linkData)));
+                Object.assign(originalLimitData, JSON.parse(JSON.stringify(limitData)));
                 
                 // 重新渲染所有表格
                 renderAppTable();
@@ -2010,24 +2023,25 @@ function refreshData() {
                 renderAdvertiseTable();
                 renderAppgroupTable();
                 renderAppLimitTable();
-                // 重新渲染书签表格（如果存在）
+                
+                // 渲染书签表格
                 if (document.getElementById('browserTableBody')) {
                     renderBookmarkTable();
                 }
                 
                 // 如果是策略页面，重新渲染策略开关
-                renderPolicySwitches();
+                if (typeof renderPolicySwitches === 'function') {
+                    renderPolicySwitches();
+                }
                 
-                showAlert(LANG === 'en' ? 'Refresh successful' : '刷新成功');
+              //  showAlert(LANG === 'en' ? 'Refresh successful' : '刷新成功');
             } else {
                 showAlert(LANG === 'en' ? 'Refresh failed: ' : '刷新失败：' + res.message, 'error');
-                // 恢复原始数据
-                location.reload();
             }
         },
-        error: function() {
+        error: function(xhr, status, error) {
+            console.error('Refresh failed:', error);
             showAlert(LANG === 'en' ? 'Refresh failed' : '刷新失败', 'error');
-            location.reload();
         }
     });
 }
@@ -2193,21 +2207,7 @@ function renderAppLimitTable() {
 //保存所有数据到api.php
 function saveAllData() {
     if (!hasUnsavedChanges) {
-        // showAlert(LANG === 'en' ? 'No changes to save' : '没有需要保存的更改');
         return;
-    }
-    
-    const advertisePayload = {
-        total: advertiseData.advertises ? advertiseData.advertises.length : 0,
-        advertises: advertiseData.advertises || []
-    };
-    
-    // 关键修复：确保 bookmarkData 不是空的
-    // 如果 bookmarkData 为空但原始数据有值，使用原始数据
-    let bookmarksToSave = bookmarkData;
-    if ((!bookmarkData || bookmarkData.length === 0) && originalBookmarkData && originalBookmarkData.length > 0) {
-        console.warn('bookmarkData is empty but originalBookmarkData has data, using original');
-        bookmarksToSave = originalBookmarkData;
     }
     
     const data = {
@@ -2219,9 +2219,16 @@ function saveAllData() {
         advertise: advertiseData,
         appgroup: appgroupData,
         link: linkData,
-        limit: limitData,
-        bookmarks: bookmarksToSave  // 使用修复后的书签数据
+        limit: limitData
     };
+    
+    // 只有在书签数据已加载的情况下才发送，防止在其他标签页保存时覆盖为空数组
+    if (bookmarksLoaded) {
+        data.bookmarks = bookmarkData;
+    }
+    
+    console.log('Saving all data, bookmarks loaded:', bookmarksLoaded, 
+                'count:', bookmarksLoaded ? bookmarkData.length : 'N/A');
     
     $.ajax({
         url: 'api.php',
@@ -2230,7 +2237,7 @@ function saveAllData() {
         contentType: 'application/json',
         success: function(res) {
             if (res.success) {
-                // 更新原始数据
+                // 更新所有原始数据
                 Object.assign(originalAppData, JSON.parse(JSON.stringify(appData)));
                 Object.assign(originalDeviceData, JSON.parse(JSON.stringify(deviceData)));
                 Object.assign(originalUserData, JSON.parse(JSON.stringify(userData)));
@@ -2238,19 +2245,27 @@ function saveAllData() {
                 Object.assign(originalAppgroupData, JSON.parse(JSON.stringify(appgroupData)));
                 Object.assign(originalLinkData, JSON.parse(JSON.stringify(linkData)));
                 Object.assign(originalLimitData, JSON.parse(JSON.stringify(limitData)));
-                // 更新书签原始数据为实际保存的数据
-                Object.assign(originalBookmarkData, JSON.parse(JSON.stringify(bookmarksToSave)));
+                
+                // 如果书签已加载，同步 originalBookmarkData
+                if (bookmarksLoaded) {
+                    Object.assign(originalBookmarkData, JSON.parse(JSON.stringify(bookmarkData)));
+                }
+                
                 resetSaveButton();
-                // 延迟2秒后刷新
+                
+                // 延迟刷新数据
                 setTimeout(function() {
                     refreshData();
-                }, 2000);
+                }, 500);
+                
+               // showAlert(LANG === 'en' ? 'Save successful' : '保存成功');
             } else {
-                showAlert('<?php echo Lang::get('save_failed', $lang); ?>: ' + res.message, 'error');
+             //   showAlert(LANG === 'en' ? 'Save failed: ' : '保存失败：' + res.message, 'error');
             }
         },
-        error: function() {
-            showAlert('<?php echo Lang::get('save_failed', $lang); ?>', 'error');
+        error: function(xhr, status, error) {
+            console.error('Save failed:', error);
+            showAlert(LANG === 'en' ? 'Save failed' : '保存失败', 'error');
         }
     });
 }
@@ -4034,35 +4049,49 @@ function updateLaunchMode(mode) {
 }
 
 // ========== 浏览器管理（书签） ==========
+// 从服务器初始化书签数据
 let bookmarkData = [];
 let originalBookmarkData = [];
+let bookmarksLoaded = false;  // 添加标志，确保数据已加载
 
 // 从服务器获取书签数据
 function loadBookmarkData() {
-    $.ajax({
-        url: 'api.php',
-        method: 'POST',
-        data: JSON.stringify({
-            action: 'get_bookmarks',
-            token: CSRF_TOKEN
-        }),
-        contentType: 'application/json',
-        success: function(res) {
-            if (res.success && res.bookmarks) {
-                bookmarkData = Array.isArray(res.bookmarks) ? res.bookmarks : [];
-                originalBookmarkData = JSON.parse(JSON.stringify(bookmarkData));
-                renderBookmarkTable();
-            } else {
-                console.error('Failed to load bookmark data');
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            url: 'api.php',
+            method: 'POST',
+            data: JSON.stringify({
+                action: 'get_bookmarks',
+                token: CSRF_TOKEN
+            }),
+            contentType: 'application/json',
+            success: function(res) {
+                console.log('Bookmarks loaded from server:', res);
+                if (res.success && res.bookmarks) {
+                    bookmarkData = Array.isArray(res.bookmarks) ? res.bookmarks : [];
+                    originalBookmarkData = JSON.parse(JSON.stringify(bookmarkData));
+                    bookmarksLoaded = true;
+                    console.log('Bookmarks initialized:', bookmarkData.length, 'items');
+                    renderBookmarkTable();
+                    resolve(bookmarkData);
+                } else {
+                    console.warn('Failed to load bookmark data');
+                    bookmarkData = [];
+                    originalBookmarkData = [];
+                    bookmarksLoaded = true;
+                    renderBookmarkTable();
+                    resolve([]);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Failed to load bookmark data:', error);
                 bookmarkData = [];
+                originalBookmarkData = [];
+                bookmarksLoaded = true;
                 renderBookmarkTable();
+                resolve([]);
             }
-        },
-        error: function() {
-            console.error('Failed to load bookmark data');
-            bookmarkData = [];
-            renderBookmarkTable();
-        }
+        });
     });
 }
 
@@ -4072,14 +4101,16 @@ function renderBookmarkTable() {
     if (!tbody) return;
     
     if (!bookmarkData || bookmarkData.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="4" style="text-align: center;">${LANG === 'en' ? 'No bookmarks' : '暂无书签'}</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; padding: 20px; color: #999;">${LANG === 'en' ? 'No bookmarks' : '暂无书签'}</td></tr>`;
         return;
     }
     
     tbody.innerHTML = bookmarkData.map((bookmark, index) => `
         <tr data-index="${index}">
             <td style="text-align: center;">${index + 1}</td>
-            <td><strong>${escapeHtml(bookmark.name)}</strong></td>
+            <td>
+                <strong>${escapeHtml(bookmark.name)}</strong>
+            </td>
             <td style="word-break: break-all;">
                 <a href="${escapeHtml(bookmark.url)}" target="_blank" style="color: #337ab7; text-decoration: none;">
                     ${escapeHtml(bookmark.url.length > 60 ? bookmark.url.substring(0, 60) + '...' : bookmark.url)}
@@ -4087,10 +4118,10 @@ function renderBookmarkTable() {
             </td>
             <td style="text-align: center;">
                 <button class="btn btn-info btn-xs btn-action" onclick="editBookmark(${index})">
-                    <span class="glyphicon glyphicon-edit"></span> ${LANG === 'en' ? 'Edit' : '编辑'}
+                    <span class="glyphicon glyphicon-edit"></span> <?php echo Lang::get('edit', $lang); ?>
                 </button>
                 <button class="btn btn-danger btn-xs btn-action" onclick="deleteBookmark(${index})">
-                    <span class="glyphicon glyphicon-trash"></span> ${LANG === 'en' ? 'Delete' : '删除'}
+                    <span class="glyphicon glyphicon-trash"></span> <?php echo Lang::get('delete', $lang); ?>
                 </button>
             </td>
         </tr>
@@ -4174,128 +4205,6 @@ function deleteBookmark(index) {
     });
 }
 
-// 测试URL是否可访问
-function testBookmarkUrl() {
-    const url = document.getElementById('bookmark_url').value.trim();
-    if (!url) {
-        alert(LANG === 'en' ? 'Please enter a URL first' : '请先输入URL');
-        return;
-    }
-    
-    // 创建隐藏的iframe或使用fetch测试
-    const testWindow = window.open(url, '_blank');
-    if (testWindow) {
-        setTimeout(() => {
-            alert(LANG === 'en' ? 'URL opened in new window' : '已在新窗口打开URL');
-        }, 500);
-    } else {
-        alert(LANG === 'en' ? 'Popup blocked. Please check manually.' : '弹窗被阻止，请手动检查。');
-    }
-}
-
-// 导出书签为JSON文件
-function exportBookmarks() {
-    const dataStr = JSON.stringify(bookmarkData, null, 2);
-    const blob = new Blob([dataStr], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `bookmarks_${new Date().toISOString().slice(0, 19).replace(/:/g, '-')}.json`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-}
-
-// 打开导入书签模态框
-function importBookmarks() {
-    document.getElementById('bookmarkImportMethod').value = 'file';
-    document.getElementById('bookmarkImportFileDiv').style.display = 'block';
-    document.getElementById('bookmarkImportTextDiv').style.display = 'none';
-    document.getElementById('bookmarkImportFile').value = '';
-    document.getElementById('bookmarkImportText').value = '';
-    openModal('importBookmarkModal');
-}
-
-// 切换导入方式
-function toggleBookmarkImportMethod() {
-    const method = document.getElementById('bookmarkImportMethod').value;
-    document.getElementById('bookmarkImportFileDiv').style.display = method === 'file' ? 'block' : 'none';
-    document.getElementById('bookmarkImportTextDiv').style.display = method === 'text' ? 'block' : 'none';
-}
-
-// 处理书签导入
-function processBookmarkImport() {
-    const method = document.getElementById('bookmarkImportMethod').value;
-    const merge = document.getElementById('bookmarkImportMerge').checked;
-    
-    let importedData;
-    
-    if (method === 'file') {
-        const file = document.getElementById('bookmarkImportFile').files[0];
-        if (!file) {
-            alert(LANG === 'en' ? 'Please select a file' : '请选择文件');
-            return;
-        }
-        
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            try {
-                importedData = JSON.parse(e.target.result);
-                processBookmarkData(importedData, merge);
-            } catch (err) {
-                alert(LANG === 'en' ? 'Invalid JSON file' : '无效的JSON文件');
-            }
-        };
-        reader.readAsText(file);
-    } else {
-        try {
-            importedData = JSON.parse(document.getElementById('bookmarkImportText').value);
-            processBookmarkData(importedData, merge);
-        } catch (err) {
-            alert(LANG === 'en' ? 'Invalid JSON format' : '无效的JSON格式');
-        }
-    }
-}
-
-// 处理导入的书签数据
-function processBookmarkData(importedData, merge) {
-    if (!Array.isArray(importedData)) {
-        alert(LANG === 'en' ? 'Data must be an array' : '数据必须是数组格式');
-        return;
-    }
-    
-    // 验证数据格式
-    const valid = importedData.every(item => 
-        item && typeof item === 'object' && 
-        typeof item.name === 'string' &&
-        typeof item.url === 'string'
-    );
-    
-    if (!valid) {
-        alert(LANG === 'en' ? 'Invalid data format. Each item must have name and url fields' : '无效的数据格式，每个项目必须包含 name 和 url 字段');
-        return;
-    }
-    
-    if (merge) {
-        // 合并模式：去重添加
-        const existing = new Set(bookmarkData.map(b => `${b.name}|${b.url}`));
-        const newItems = importedData.filter(item => 
-            !existing.has(`${item.name}|${item.url}`)
-        );
-        bookmarkData.push(...newItems);
-        alert(LANG === 'en' ? `Imported ${newItems.length} new bookmarks` : `导入了 ${newItems.length} 个新书签`);
-    } else {
-        // 替换模式
-        bookmarkData = importedData;
-        alert(LANG === 'en' ? `Replaced with ${importedData.length} bookmarks` : `替换为 ${importedData.length} 个书签`);
-    }
-    
-    closeModal('importBookmarkModal');
-    markAsUnsaved();
-    renderBookmarkTable();
-}
-
 // 页面加载时初始化书签数据（通过 API）
 if (document.getElementById('browserTableBody')) {
     loadBookmarkData();
@@ -4318,6 +4227,8 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 // 页面加载完成后初始化表格渲染
 document.addEventListener('DOMContentLoaded', function() {
+     // 初始化书签数据 - 必须等待加载完成才能进行保存操作
+    loadBookmarkData();
     renderAppTable();
     renderDeviceAppTable();
     renderUserTable();
